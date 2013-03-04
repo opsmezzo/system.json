@@ -1,0 +1,39 @@
+{
+  "name": "system.json",
+  "description": "Package management for any OS with semver, JSON, configuration and friends.",
+  "version": "1.0.0",
+  "author": "Nodejitsu Inc. <info@nodejitsu.com>",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/nodejitsu/system.json.git"
+  },
+  "keywords": [
+    "quill",
+    "system.json",
+    "runlist",
+    "dependencies",
+    "semver",
+    "configuration management",
+    "orchestration"
+  ],
+  "dependencies": {
+    "semver": "1.1.4",
+    "utile": "0.1.x",
+    "wtfos": "0.0.3"
+  },
+  "devDependencies": {
+    "conservatory-api": "0.5.x",
+    "nock": "0.13.x",
+    "vows": "0.7.x"
+  },
+  "publishConfig": {
+    "registry": "http://reg.njitsu.net:5984"
+  },
+  "main": "./lib/index",
+  "scripts": {
+    "test": "vows test/*-test.js test/**/*-test.js --spec"
+  },
+  "engines": {
+    "node": "0.8.x | 0.6.x"
+  }
+}

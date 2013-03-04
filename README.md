@@ -1,4 +1,3 @@
-quill-runlist
-=============
+# system.json
 
-Runlist and dependency logic for quill systems.
+Package management for any OS with semver, JSON, configuration and friends.
