@@ -1,0 +1,7 @@
+{
+  "name": "quillignore",
+  "version": "0.0.0",
+  "description": "System with quillignore file",
+  "keywords": ["test", "fixture", "quillignore"],
+  "author": "Nodejitsu Inc <info@nodejitsu.com>"
+}
