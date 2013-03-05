@@ -15,40 +15,55 @@ var assert = require('assert'),
     mock = require('./helpers/mock'),
     systemJson = require('../lib');
 
+//
+// Asserts the remote runlist for `hello-remote-deps`.
+//
+function assertHelloRemoteDeps(err, remoteRunlist) {
+  assert.isNull(err);
+  assert.lengthOf(remoteRunlist, 1);
+
+  var fixtureOne = remoteRunlist[0];
+  assert.equal(fixtureOne.name, 'fixture-one');
+  assert.equal(fixtureOne.version, '0.0.0');
+  assert.equal(fixtureOne.semver, '0.0.x');
+}
+
+//
+// Test macro that asserts the system with
+// `this.context.name` returns a remote runlist
+// that conforms to the `assertFn`.
+//
+function shouldMakeRemoteRunlist(assertFn) {
+  return {
+    topic: function () {
+      var api  = nock('http://api.testquill.com'),
+          that = this;
+
+      mock.systems.all(api);
+      systemJson.dependencies({
+        systems: this.context.name,
+        client: conservatory.createClient('composer', {
+          protocol: 'http',
+          host: 'api.testquill.com',
+          port: 80,
+          auth: {}
+        }).systems
+      }, function (err, deps) {
+        return that.callback(err, err || systemJson.remote.runlist({
+          systems: deps
+        }));
+      });
+    },
+    "should respond with the correct remoteRunlist": assertFn
+  }
+}
+
 vows.describe('system.json/dependencies').addBatch({
   "When using system.json": {
     "calculating dependencies": macros.shouldAnalyzeAllDeps(),
     "the remote.runlist() method": {
-      "hello-remote-deps": {
-        topic: function () {
-          var api  = nock('http://api.testquill.com'),
-              that = this;
-
-          mock.systems.all(api);
-          systemJson.dependencies({
-            systems: 'hello-remote-deps',
-            client: conservatory.createClient('composer', {
-              protocol: 'http',
-              host: 'api.testquill.com',
-              port: 80,
-              auth: {}
-            }).systems
-          }, function (err, deps) {
-            return that.callback(err, err || systemJson.remote.runlist({
-              systems: deps
-            }));
-          });
-        },
-        "should respond with the correct remoteRunlist": function (err, remoteRunlist) {
-          assert.isNull(err);
-          assert.lengthOf(remoteRunlist, 1);
-
-          var fixtureOne = remoteRunlist[0];
-          assert.equal(fixtureOne.name, 'fixture-one');
-          assert.equal(fixtureOne.version, '0.0.0');
-          assert.equal(fixtureOne.semver, '0.0.x');
-        }
-      }
+      "hello-remote-deps":    shouldMakeRemoteRunlist(assertHelloRemoteDeps),
+      "indirect-remote-deps": shouldMakeRemoteRunlist(assertHelloRemoteDeps)
     }
   }
 }).export(module);
