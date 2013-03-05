@@ -1,6 +1,6 @@
 {
   "name": "system.json",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Package management for any OS with semver, JSON, configuration and friends.",
   "author": "Nodejitsu Inc. <info@nodejitsu.com>",
   "repository": {
