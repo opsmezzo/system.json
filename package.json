@@ -17,12 +17,12 @@
     "orchestration"
   ],
   "dependencies": {
-    "semver": "1.1.4",
-    "utile": "0.1.x",
-    "wtfos": "0.0.3"
+    "semver": "~1.1.4",
+    "utile": "~0.1.7",
+    "wtfos": "~0.0.3"
   },
   "devDependencies": {
-    "conservatory-api": "0.5.x",
+    "conservatory-api": "~0.6.0",
     "nock": "0.13.x",
     "vows": "0.7.x"
   },
