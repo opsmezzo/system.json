@@ -10,26 +10,31 @@ var assert = require('assert'),
     path = require('path'),
     nock = require('nock'),
     vows = require('vows'),
-    helpers = require('../helpers'),
-    macros = require('../helpers/macros'),
-    mock = require('../helpers/mock'),
-    quill = require('../../lib/quill');
+    conservatory = require('conservatory-api'),
+    macros = require('./helpers/macros'),
+    mock = require('./helpers/mock'),
+    systemJson = require('../lib');
 
-vows.describe('quill/composer/dependencies').addBatch(macros.shouldInit()).addBatch({
-  "When using quill.composer": {
+vows.describe('system.json/dependencies').addBatch({
+  "When using system.json": {
     "calculating dependencies": macros.shouldAnalyzeAllDeps(),
-    "the remoteRunlist() method": {
+    "the remote.runlist() method": {
       "hello-remote-deps": {
         topic: function () {
           var api  = nock('http://api.testquill.com'),
               that = this;
 
           mock.systems.all(api);
-          quill.composer.dependencies({
+          systemJson.dependencies({
             systems: 'hello-remote-deps',
-            client: quill.systems
+            client: conservatory.createClient('composer', {
+              protocol: 'http',
+              host: 'api.testquill.com',
+              port: 80,
+              auth: {}
+            }).systems
           }, function (err, deps) {
-            return that.callback(err, err || quill.composer.remote.runlist({
+            return that.callback(err, err || systemJson.remote.runlist({
               systems: deps
             }));
           });
