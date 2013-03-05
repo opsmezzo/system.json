@@ -1,0 +1,12 @@
+{
+  "name": "indirect-remote-dep",
+  "version": "0.0.0",
+  "description": "Test fixture with indirect remoteDependencies",
+  "author": "Nodejitsu Inc <info@nodejitsu.com>",
+  "config": {
+    "world": "nyc"
+  },
+  "dependencies": {
+    "hello-remote-deps": "0.0.x"
+  }
+}

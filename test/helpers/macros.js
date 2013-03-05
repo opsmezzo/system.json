@@ -8,6 +8,21 @@ var assert = require('assert'),
     systemJson = require('../../lib'),
     trees = require('../fixtures/trees');
 
+exports.shouldAnalyzeAllDeps = function () {
+  var shouldAnalyzeDeps = exports.shouldAnalyzeDeps;
+
+  return {
+    "with a no dependencies":                      shouldAnalyzeDeps('no-deps'),
+    "with a single dependency (implicit runlist)": shouldAnalyzeDeps('single-dep'),
+    "with a single dependency (empty runlist)":    shouldAnalyzeDeps('empty-runlist'),
+    "with multiple dependencies":                  shouldAnalyzeDeps('depends-on-a-b'),
+    "with remoteDependencies":                     shouldAnalyzeDeps('hello-remote-deps'),
+    "with indirect remoteDependencies":            shouldAnalyzeDeps('indirect-remote-deps'),
+    "with a dependency in a dependency":           shouldAnalyzeDeps('dep-in-dep'),
+    "with a single OS dependency":                 shouldAnalyzeDeps('single-ubuntu-dep', 'ubuntu')
+  };
+};
+
 //
 // ### function shouldFindDeps (system, os)
 //
@@ -72,18 +87,4 @@ exports.shouldMakeRunlist = function (system, os) {
       );
     }
   }
-};
-
-exports.shouldAnalyzeAllDeps = function () {
-  var shouldAnalyzeDeps = exports.shouldAnalyzeDeps;
-
-  return {
-    "with a no dependencies":                      shouldAnalyzeDeps('no-deps'),
-    "with a single dependency (implicit runlist)": shouldAnalyzeDeps('single-dep'),
-    "with a single dependency (empty runlist)":    shouldAnalyzeDeps('empty-runlist'),
-    "with multiple dependencies":                  shouldAnalyzeDeps('depends-on-a-b'),
-    "with remoteDependencies":                     shouldAnalyzeDeps('hello-remote-deps'),
-    "with a dependency in a dependency":           shouldAnalyzeDeps('dep-in-dep'),
-    "with a single OS dependency":                 shouldAnalyzeDeps('single-ubuntu-dep', 'ubuntu')
-  };
 };

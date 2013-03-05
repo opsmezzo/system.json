@@ -57,6 +57,47 @@ trees['hello-remote-deps'] = {
   list: ['fixture-two@0.0.0', 'hello-remote-deps@0.0.0']
 };
 
+//
+// Dependency tree with indirect remoteDependencies
+//
+trees['indirect-remote-deps'] = {
+  tree: {
+    'indirect-remote-deps': {
+      required: '*',
+      dependencies: {
+        'hello-remote-deps': {
+          remoteDependencies: { 'fixture-one': '0.0.x' },
+          required: '0.0.x',
+          dependencies: {
+            'fixture-two': {
+              required: '0.0.x',
+              version: '0.0.0',
+              name: 'fixture-two',
+              dependencies: {},
+              runlist: []
+            }
+          },
+          remoteDependencies: {
+            'fixture-one': {
+              name: 'fixture-one',
+              version: '0.0.0',
+              dependencies: {},
+              required: '0.0.x',
+              runlist: []
+            }
+          },
+          version: '0.0.0',
+          name: 'hello-remote-deps',
+          runlist: ['fixture-two']
+        }
+      },
+      version: '0.0.0',
+      name: 'indirect-remote-deps',
+      runlist: ['hello-remote-deps']
+    }
+  },
+  list: ['fixture-two@0.0.0', 'hello-remote-deps@0.0.0', 'indirect-remote-deps@0.0.0']
+};
 
 //
 // Dependency tree with two dependencies

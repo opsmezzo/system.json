@@ -28,6 +28,17 @@ var systems = module.exports = [
     }
   },
   {
+    name: 'indirect-remote-deps',
+    version: '0.0.0',
+    versions: {
+      '0.0.0': {
+        dependencies: {
+          'hello-remote-deps': '0.0.x'
+        }
+      }
+    }
+  },
+  {
     name: 'fixture-two',
     version: '0.0.0',
     versions: {
