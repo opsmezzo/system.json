@@ -1,61 +1,42 @@
+/*
+ * macros.js: Test macros for `system.json`.
+ *
+ * (C) 2010, Nodejitsu Inc.
+ *
+ */
 
 var assert = require('assert'),
     fs = require('fs'),
     path = require('path'),
     conservatory = require('conservatory-api'),
     nock = require('nock'),
+    utile = require('utile'),
     mock = require('./mock'),
+    helpers = require('./index'),
     systemJson = require('../../lib'),
     trees = require('../fixtures/trees');
-
-exports.shouldAnalyzeAllDeps = function () {
-  var shouldAnalyzeDeps = exports.shouldAnalyzeDeps;
-
-  return {
-    "with a no dependencies":                      shouldAnalyzeDeps('no-deps'),
-    "with a single dependency (implicit runlist)": shouldAnalyzeDeps('single-dep'),
-    "with a single dependency (empty runlist)":    shouldAnalyzeDeps('empty-runlist'),
-    "with multiple dependencies":                  shouldAnalyzeDeps('depends-on-a-b'),
-    "with remoteDependencies":                     shouldAnalyzeDeps('hello-remote-deps'),
-    "with indirect remoteDependencies":            shouldAnalyzeDeps('indirect-remote-deps'),
-    "with a dependency in a dependency":           shouldAnalyzeDeps('dep-in-dep'),
-    "with a single OS dependency":                 shouldAnalyzeDeps('single-ubuntu-dep', 'ubuntu')
-  };
-};
 
 //
 // ### function shouldFindDeps (system, os)
 //
-// Setups mock API endpoints for the `systems`, invokes 
+// Setups mock API endpoints for the `systems`, invokes
 // `systemJson.dependencies()` and asserts the result
 // is equal to `tree`.
 //
 exports.shouldAnalyzeDeps = function (system, os) {
-  var api = nock('http://api.testquill.com'),
-      fixture = trees[system],
+  var fixture = trees[system],
       tree = fixture.tree;
-  
-  mock.systems.all(api);
-    
+
   return {
     "the dependencies() method": {
       topic: function () {
-        systemJson.dependencies({
-          client: conservatory.createClient('composer', {
-            protocol: 'http',
-            host: 'api.testquill.com',
-            port: 80,
-            auth: {}
-          }).systems,
-          systems: system,
-          os: os
-        }, this.callback);
+        helpers.dependencies(system, os, this.callback);
       },
       "should respond with the correct dependency tree": function (err, actual) {
         assert.isNull(err);
         assert.deepEqual(actual, tree);
       },
-      "the runlist() method": exports.shouldMakeRunlist(system, os)
+      "when used by runlist()": exports.shouldMakeRunlist(system, os)
     }
   };
 };
@@ -63,7 +44,7 @@ exports.shouldAnalyzeDeps = function (system, os) {
 //
 // ### function shouldMakeRunlist (system, os)
 //
-// Setups mock API endpoints for the `systems`, invokes 
+// Setups mock API endpoints for the `systems`, invokes
 // `systemJson.runlist()` and asserts the result
 // is equal to `list`.
 //
@@ -87,4 +68,72 @@ exports.shouldMakeRunlist = function (system, os) {
       );
     }
   }
+};
+
+//
+// ### function shouldBeDependent (system0, system1, ...)
+// Asserts that all arguments depend on the
+// context name.
+//
+exports.shouldBeDependent = function () {
+  return exports.shouldHaveRelationship(
+    'should be dependent',
+    function (tree) {
+      assert.include(
+        systemJson.dependencies.of(this.target, tree),
+        this.system
+      );
+    }
+  ).apply(null, arguments);
+};
+
+//
+// ### function shouldNotBeDependent (system0, system1, ...)
+// Asserts that all arguments do not depend on the
+// context name.
+//
+exports.shouldNotBeDependent = function () {
+  return exports.shouldHaveRelationship(
+    'should not be dependent',
+    function (tree) {
+      assert.isFalse(
+        systemJson.dependencies.of(this.target, tree)
+      );
+    }
+  ).apply(null, arguments);
+};
+
+//
+// ### function shouldHaveRelationship (msg, assertFn)
+// Asserts that all arguments have the `assertFn` relationship
+// with the context name.
+//
+exports.shouldHaveRelationship = function (msg, assertFn) {
+  return function () {
+    return Array.prototype.slice.call(arguments)
+      .reduce(function (tests, system) {
+        var name = system,
+            os;
+
+        if (typeof system === 'object') {
+          name = system.name;
+          os = system.os
+        }
+
+        tests['by ' + name] = {
+          topic: function (target) {
+            this.target = target;
+            this.system = name;
+            helpers.dependencies(name, os, this.callback);
+          }
+        };
+
+        tests['by ' + name][msg] = assertFn;
+        return tests;
+      }, {
+        topic: function () {
+          return this.context.name;
+        }
+      });
+  };
 };

@@ -28,6 +28,18 @@ var systems = module.exports = [
     }
   },
   {
+    name: 'hello-world',
+    version: '0.0.0',
+    versions: {
+      '0.0.0': {
+        dependencies: {
+          'fixture-one': '0.0.x',
+          'fixture-two': '0.0.x'
+        }
+      }
+    }
+  },
+  {
     name: 'indirect-remote-deps',
     version: '0.0.0',
     versions: {
@@ -100,6 +112,29 @@ var systems = module.exports = [
           c: '0.3.0'
         }
       }
+    }
+  },
+  {
+    name: 'nested-dep',
+    version: '1.0.2',
+    versions: {
+      '1.0.2': {
+        runlist: ['c', 'b', 'a'],
+        dependencies: {
+          a: '0.0.1',
+          c: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'ubuntu-dep',
+    version: '0.0.0',
+    versions: {
+      '0.0.0': {}
+    },
+    os: {
+      ubuntu: { 'fixture-one': '0.0.0' }
     }
   },
   {

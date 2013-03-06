@@ -132,6 +132,7 @@ trees['depends-on-a-b'] = {
 
 //
 // Dependency tree with dependency in a dependency
+// that is also required by the top-level
 //
 trees['dep-in-dep'] = {
   tree: {
@@ -174,6 +175,45 @@ trees['dep-in-dep'] = {
     }
   },
   list: ['b@0.2.0', 'c@0.3.0', 'a@0.0.1', 'dep-in-dep@1.0.2']
+};
+
+//
+// Dependency tree with dependency in a dependency
+//
+trees['nested-dep'] = {
+  tree: {
+    'nested-dep': {
+      name: 'nested-dep',
+      runlist: [ 'c', 'b', 'a' ],
+      dependencies: {
+        a: {
+          name: 'a',
+          runlist: [],
+          required: '0.0.1',
+          dependencies: {},
+          version: '0.0.1'
+        },
+        c: {
+          name: 'c',
+          runlist: [ 'b' ],
+          dependencies: {
+            b: {
+              name: 'b',
+              runlist: [],
+              required: '0.2.0',
+              dependencies: {},
+              version: '0.2.0'
+            }
+          },
+          required: '0.3.0',
+          version: '0.3.0'
+        }
+      },
+      required: '*',
+      version: '1.0.2'
+    }
+  },
+  list: ['b@0.2.0', 'c@0.3.0', 'a@0.0.1', 'nested-dep@1.0.2']
 };
 
 //

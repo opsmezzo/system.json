@@ -1,5 +1,5 @@
 /*
- * mock.js: Mock helpers for `quill`.
+ * mock.js: Mock helpers for `system.json`.
  *
  * (C) 2010, Nodejitsu Inc.
  *
