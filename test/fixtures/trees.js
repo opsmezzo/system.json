@@ -299,3 +299,46 @@ trees['single-ubuntu-dep'] = {
   },
   list: ['b@0.2.0', 'a@0.0.1', 'single-ubuntu-dep@0.0.1']
 };
+
+//
+// System with circular dependencies.
+//
+trees['circular-deps'] = {
+  tree: {
+    'circular-deps': {
+      name: 'circular-deps',
+      dependencies: {
+        d: {
+          name: 'd',
+          runlist: ['e'],
+          required: '0.3.0',
+          dependencies: {
+            e: {
+              runlist: ['d'],
+              version: '0.2.0',
+              dependencies: {},
+              name: 'e',
+              required: '0.2.0'
+            }
+          },
+          version: '0.3.0'
+        }
+      },
+      runlist: ['d'],
+      required: '*',
+      version: '0.3.0'
+    }
+  },
+  list: ['e@0.2.0', 'd@0.3.0', 'circular-deps@0.3.0']
+};
+
+//
+// Setup the circular dependency
+//
+trees['circular-deps']
+  .tree['circular-deps']
+  .dependencies.d
+  .dependencies.e
+  .dependencies.d = trees['circular-deps']
+    .tree['circular-deps']
+    .dependencies.d;

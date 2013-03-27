@@ -176,6 +176,42 @@ var systems = module.exports = [
         }
       }
     }
+  },
+  {
+    name: 'd',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['e'],
+        dependencies: {
+          e: '0.2.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'e',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['d'],
+        dependencies: {
+          d: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'circular-deps',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['d'],
+        dependencies: {
+          d: '0.3.0'
+        }
+      }
+    }
   }
 ];
 
