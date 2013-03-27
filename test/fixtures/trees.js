@@ -184,7 +184,7 @@ trees['nested-dep'] = {
   tree: {
     'nested-dep': {
       name: 'nested-dep',
-      runlist: [ 'c', 'b', 'a' ],
+      runlist: [ 'c', 'a' ],
       dependencies: {
         a: {
           name: 'a',

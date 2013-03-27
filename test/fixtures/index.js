@@ -119,7 +119,7 @@ var systems = module.exports = [
     version: '1.0.2',
     versions: {
       '1.0.2': {
-        runlist: ['c', 'b', 'a'],
+        runlist: ['c', 'a'],
         dependencies: {
           a: '0.0.1',
           c: '0.3.0'
