@@ -299,3 +299,139 @@ trees['single-ubuntu-dep'] = {
   },
   list: ['b@0.2.0', 'a@0.0.1', 'single-ubuntu-dep@0.0.1']
 };
+
+//
+// System with circular dependencies.
+//
+trees['circular-deps'] = {
+  tree: {
+    'circular-deps': {
+      name: 'circular-deps',
+      remoteDependencies: {
+        f: {
+          name: 'f',
+          runlist: ['g'],
+          required: '0.3.0',
+          dependencies: {},
+          remoteDependencies: {
+            g: {
+              runlist: ['f'],
+              version: '0.2.0',
+              dependencies: {},
+              remoteDependencies: {},
+              name: 'g',
+              required: '0.2.0'
+            }
+          },
+          version: '0.3.0'
+        }
+      },
+      dependencies: {
+        d: {
+          name: 'd',
+          runlist: ['e'],
+          required: '0.3.0',
+          dependencies: {
+            e: {
+              runlist: ['d'],
+              version: '0.2.0',
+              dependencies: {},
+              name: 'e',
+              required: '0.2.0'
+            }
+          },
+          version: '0.3.0'
+        }
+      },
+      runlist: ['d'],
+      required: '*',
+      version: '0.3.0'
+    }
+  },
+  list: ['e@0.2.0', 'd@0.3.0', 'circular-deps@0.3.0']
+};
+
+//
+// Setup the circular dependency
+//
+trees['circular-deps']
+  .tree['circular-deps']
+  .dependencies.d
+  .dependencies.e
+  .dependencies.d = trees['circular-deps']
+    .tree['circular-deps']
+    .dependencies.d;
+
+trees['circular-deps']
+  .tree['circular-deps']
+  .remoteDependencies.f
+  .remoteDependencies.g
+  .remoteDependencies.f = trees['circular-deps']
+    .tree['circular-deps']
+    .remoteDependencies.f;
+
+trees['indirect-circular-deps'] = {
+  tree: {
+    'indirect-circular-deps': {
+      remoteDependencies: {
+        h: {
+          runlist: ['i'],
+          remoteDependencies: {
+            i: {
+              runlist: ['indirect-circular-deps'],
+              remoteDependencies: {},
+              name: 'i',
+              version: '0.3.0',
+              required: '0.3.0',
+              dependencies: {}
+            }
+          },
+          name: 'h',
+          version: '0.2.0',
+          required: '0.2.0',
+          dependencies: {}
+        }
+      },
+      dependencies: {
+        j: {
+          name: 'j',
+          runlist: [ 'k' ],
+          dependencies: {},
+          required: '0.2.0',
+          version: '0.2.0',
+          dependencies: {
+            k: {
+              name: 'k',
+              runlist: [ 'indirect-circular-deps' ],
+              dependencies: {},
+              required: '0.3.0',
+              version: '0.3.0'
+            }
+          }
+        }
+      },
+      name: 'indirect-circular-deps',
+      version: '0.3.0',
+      required: '*',
+      runlist: ['j']
+    }
+  },
+  list: ['k@0.3.0', 'j@0.2.0', 'indirect-circular-deps@0.3.0']
+};
+
+//
+// Setup the indirect circular dependency
+//
+trees['indirect-circular-deps']
+  .tree['indirect-circular-deps']
+  .remoteDependencies.h
+  .remoteDependencies.i
+  .remoteDependencies['indirect-circular-deps'] = trees['indirect-circular-deps']
+    .tree['indirect-circular-deps'];
+
+trees['indirect-circular-deps']
+  .tree['indirect-circular-deps']
+  .dependencies.j
+  .dependencies.k
+  .dependencies['indirect-circular-deps'] = trees['indirect-circular-deps']
+    .tree['indirect-circular-deps'];

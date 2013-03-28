@@ -17,6 +17,7 @@
     "orchestration"
   ],
   "dependencies": {
+    "cycle": "~1.0.2",
     "semver": "~1.1.4",
     "utile": "~0.1.7",
     "wtfos": "~0.0.3"
