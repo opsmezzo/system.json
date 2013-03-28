@@ -176,6 +176,131 @@ var systems = module.exports = [
         }
       }
     }
+  },
+  {
+    name: 'd',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['e'],
+        dependencies: {
+          e: '0.2.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'e',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['d'],
+        dependencies: {
+          d: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'f',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['g'],
+        remoteDependencies: {
+          g: '0.2.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'g',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['f'],
+        remoteDependencies: {
+          f: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'h',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['i'],
+        remoteDependencies: {
+          i: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'i',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['indirect-circular-deps'],
+        remoteDependencies: {
+          'indirect-circular-deps': '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'j',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['k'],
+        dependencies: {
+          k: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'k',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['indirect-circular-deps'],
+        dependencies: {
+          'indirect-circular-deps': '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'circular-deps',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['d'],
+        remoteDependencies: {
+          f: '0.3.0'
+        },
+        dependencies: {
+          d: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'indirect-circular-deps',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        remoteDependencies: {
+          h: '0.2.0'
+        },
+        dependencies: {
+          j: '0.2.0'
+        }
+      }
+    }
   }
 ];
 
