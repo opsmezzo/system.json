@@ -226,6 +226,54 @@ var systems = module.exports = [
     }
   },
   {
+    name: 'h',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['i'],
+        remoteDependencies: {
+          i: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'i',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['indirect-circular-deps'],
+        remoteDependencies: {
+          'indirect-circular-deps': '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'j',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['k'],
+        dependencies: {
+          k: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'k',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['indirect-circular-deps'],
+        dependencies: {
+          'indirect-circular-deps': '0.3.0'
+        }
+      }
+    }
+  },
+  {
     name: 'circular-deps',
     version: '0.3.0',
     versions: {
@@ -236,6 +284,20 @@ var systems = module.exports = [
         },
         dependencies: {
           d: '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'indirect-circular-deps',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        remoteDependencies: {
+          h: '0.2.0'
+        },
+        dependencies: {
+          j: '0.2.0'
         }
       }
     }
