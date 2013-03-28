@@ -65,38 +65,44 @@ function shouldMakeRemoteRunlist(assertFn) {
 vows.describe('system.json/dependencies').addBatch({
   "When using system.json": {
     "calculating dependencies": {
-      // "with a no dependencies":                      shouldAnalyzeDeps('no-deps'),
-      // "with a single dependency (implicit runlist)": shouldAnalyzeDeps('single-dep'),
-      // "with a single dependency (empty runlist)":    shouldAnalyzeDeps('empty-runlist'),
-      // "with multiple dependencies":                  shouldAnalyzeDeps('depends-on-a-b'),
-      // "with remoteDependencies":                     shouldAnalyzeDeps('hello-remote-deps'),
-      // "with indirect remoteDependencies":            shouldAnalyzeDeps('indirect-remote-deps'),
-      // "with duplicate nested dependencies":          shouldAnalyzeDeps('dep-in-dep'),
-      // "with nested dependencies":                    shouldAnalyzeDeps('nested-dep'),
-      // "with a single OS dependency":                 shouldAnalyzeDeps('single-ubuntu-dep', 'ubuntu')
-      "with circular dependencies":                     shouldAnalyzeDeps('circular-deps')
+      "with a no dependencies":                      shouldAnalyzeDeps('no-deps'),
+      "with a single dependency (implicit runlist)": shouldAnalyzeDeps('single-dep'),
+      "with a single dependency (empty runlist)":    shouldAnalyzeDeps('empty-runlist'),
+      "with multiple dependencies":                  shouldAnalyzeDeps('depends-on-a-b'),
+      "with remoteDependencies":                     shouldAnalyzeDeps('hello-remote-deps'),
+      "with indirect remoteDependencies":            shouldAnalyzeDeps('indirect-remote-deps'),
+      "with duplicate nested dependencies":          shouldAnalyzeDeps('dep-in-dep'),
+      "with nested dependencies":                    shouldAnalyzeDeps('nested-dep'),
+      "with a single OS dependency":                 shouldAnalyzeDeps('single-ubuntu-dep', 'ubuntu'),
+      "with circular dependencies":                  shouldAnalyzeDeps('circular-deps')
     },
-    // "remote.runlist()": {
-    //   "hello-remote-deps":    shouldMakeRemoteRunlist(assertHelloRemoteDeps),
-    //   "indirect-remote-deps": shouldMakeRemoteRunlist(assertHelloRemoteDeps)
-    // },
-    // "dependencies.of()": {
-    //   "when dependedent:": {
-    //     "fixture-one": shouldBeDependent(
-    //       'hello-world',
-    //       { name: 'ubuntu-dep', os: 'ubuntu' }
-    //     ),
-    //     "b": shouldBeDependent(
-    //       'dep-in-dep', 'c', 'nested-dep',
-    //       { name: 'single-ubuntu-dep', os: 'ubuntu' }
-    //     )
-    //   },
-    //   "when not dependent": {
-    //     "fixture-one": shouldNotBeDependent(
-    //       'a', 'b', 'c',
-    //       { name: 'ubuntu-dep', os: 'smartos' }
-    //     )
-    //   }
-    // }
+    "remote.runlist()": {
+      "hello-remote-deps":    shouldMakeRemoteRunlist(assertHelloRemoteDeps),
+      "indirect-remote-deps": shouldMakeRemoteRunlist(assertHelloRemoteDeps),
+      "circular-deps":        shouldMakeRemoteRunlist(function (err, remoteRunlist) {
+        assert.isNull(err);
+        assert.lengthOf(remoteRunlist, 2);
+        assert.equal(remoteRunlist[0].name, 'g');
+        assert.equal(remoteRunlist[1].name, 'f');
+      })
+    },
+    "dependencies.of()": {
+      "when dependedent:": {
+        "fixture-one": shouldBeDependent(
+          'hello-world',
+          { name: 'ubuntu-dep', os: 'ubuntu' }
+        ),
+        "b": shouldBeDependent(
+          'dep-in-dep', 'c', 'nested-dep',
+          { name: 'single-ubuntu-dep', os: 'ubuntu' }
+        )
+      },
+      "when not dependent": {
+        "fixture-one": shouldNotBeDependent(
+          'a', 'b', 'c',
+          { name: 'ubuntu-dep', os: 'smartos' }
+        )
+      }
+    }
   }
 }).export(module);

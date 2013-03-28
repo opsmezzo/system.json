@@ -307,6 +307,25 @@ trees['circular-deps'] = {
   tree: {
     'circular-deps': {
       name: 'circular-deps',
+      remoteDependencies: {
+        f: {
+          name: 'f',
+          runlist: ['g'],
+          required: '0.3.0',
+          dependencies: {},
+          remoteDependencies: {
+            g: {
+              runlist: ['f'],
+              version: '0.2.0',
+              dependencies: {},
+              remoteDependencies: {},
+              name: 'g',
+              required: '0.2.0'
+            }
+          },
+          version: '0.3.0'
+        }
+      },
       dependencies: {
         d: {
           name: 'd',
@@ -342,3 +361,11 @@ trees['circular-deps']
   .dependencies.d = trees['circular-deps']
     .tree['circular-deps']
     .dependencies.d;
+
+trees['circular-deps']
+  .tree['circular-deps']
+  .remoteDependencies.f
+  .remoteDependencies.g
+  .remoteDependencies.f = trees['circular-deps']
+    .tree['circular-deps']
+    .remoteDependencies.f;

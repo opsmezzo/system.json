@@ -9,6 +9,7 @@ var assert = require('assert'),
     fs = require('fs'),
     path = require('path'),
     conservatory = require('conservatory-api'),
+    cycle = require('cycle'),
     nock = require('nock'),
     utile = require('utile'),
     mock = require('./mock'),
@@ -34,7 +35,9 @@ exports.shouldAnalyzeDeps = function (system, os) {
       },
       "should respond with the correct dependency tree": function (err, actual) {
         assert.isNull(err);
-        assert.deepEqual(actual, tree);
+
+        try { assert.deepEqual(actual, tree) }
+        catch (ex) { assert.deepEqual(cycle.decycle(actual), cycle.decycle(tree)) }
       },
       "when used by runlist()": exports.shouldMakeRunlist(system, os)
     }

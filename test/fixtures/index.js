@@ -202,11 +202,38 @@ var systems = module.exports = [
     }
   },
   {
+    name: 'f',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        runlist: ['g'],
+        remoteDependencies: {
+          g: '0.2.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'g',
+    version: '0.2.0',
+    versions: {
+      '0.2.0': {
+        runlist: ['f'],
+        remoteDependencies: {
+          f: '0.3.0'
+        }
+      }
+    }
+  },
+  {
     name: 'circular-deps',
     version: '0.3.0',
     versions: {
       '0.3.0': {
         runlist: ['d'],
+        remoteDependencies: {
+          f: '0.3.0'
+        },
         dependencies: {
           d: '0.3.0'
         }
