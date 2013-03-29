@@ -274,6 +274,47 @@ var systems = module.exports = [
     }
   },
   {
+    name: 'l',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        remoteDependencies: {
+          'couchdb': "*",
+          'graphite': "*",
+          'complex-circular-deps': '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'm',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        remoteDependencies: {
+          'couchdb': "*",
+          'graphite': "*",
+          'l': '0.3.0',
+          'complex-circular-deps': '0.3.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'couchdb',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': { dependencies: {} }
+    }
+  },
+  {
+    name: 'graphite',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': { dependencies: {} }
+    }
+  },
+  {
     name: 'circular-deps',
     version: '0.3.0',
     versions: {
@@ -298,6 +339,21 @@ var systems = module.exports = [
         },
         dependencies: {
           j: '0.2.0'
+        }
+      }
+    }
+  },
+  {
+    name: 'complex-circular-deps',
+    version: '0.3.0',
+    versions: {
+      '0.3.0': {
+        remoteDependencies: {
+          l: '0.3.0',
+          m: '0.3.0'
+        },
+        dependencies: {
+          a: '0.0.1'
         }
       }
     }

@@ -27,6 +27,8 @@ mock.systems.get = function (api, system) {
 
 mock.systems.all = function (api) {
   systems.forEach(function (system) {
-    mock.systems.get(api, system);
+    for (var i = 0; i < 3; i++) {
+      mock.systems.get(api, system);
+    }
   });
 };

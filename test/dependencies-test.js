@@ -103,7 +103,8 @@ vows.describe('system.json/dependencies').addBatch({
       "with nested dependencies":                    shouldAnalyzeDeps('nested-dep'),
       "with a single OS dependency":                 shouldAnalyzeDeps('single-ubuntu-dep', 'ubuntu'),
       "with circular dependencies":                  shouldAnalyzeDeps('circular-deps'),
-      "with indirect circular dependencies":         shouldAnalyzeDeps('indirect-circular-deps')
+      "with indirect circular dependencies":         shouldAnalyzeDeps('indirect-circular-deps'),
+      "with complex circular dependencies":          shouldAnalyzeDeps('complex-circular-deps')
     },
     "remote.runlist()": {
       "hello-remote-deps":    shouldMakeRemoteRunlist(assertHelloRemoteDeps),
@@ -117,24 +118,41 @@ vows.describe('system.json/dependencies').addBatch({
       "indirect-circular-deps": shouldMakeRemoteRunlist(function (err, remoteRunlist) {
         assert.isNull(err);
         assert.lengthOf(remoteRunlist, 3);
-        assert.equal(remoteRunlist[0].name, 'indirect-circular-deps');
-        assert.equal(remoteRunlist[1].name, 'i');
-        assert.equal(remoteRunlist[2].name, 'h');
+        assert.equal(remoteRunlist[0].name, 'h');
+        assert.equal(remoteRunlist[1].name, 'indirect-circular-deps');
+        assert.equal(remoteRunlist[2].name, 'i');
+      }),
+      "complex-circular-deps": shouldMakeRemoteRunlist(function (err, remoteRunlist) {
+        assert.isNull(err);
+        assert.lengthOf(remoteRunlist, 5);
+        assert.equal(remoteRunlist[0].name, 'couchdb');
+        assert.equal(remoteRunlist[1].name, 'graphite');
+        assert.equal(remoteRunlist[2].name, 'm');
+        assert.equal(remoteRunlist[3].name, 'l');
+        assert.equal(remoteRunlist[4].name, 'complex-circular-deps');
       })
     },
     "remote.cycles()": {
-      "indirect-circular-deps": shouldFindCircularRemoteDeps(function (err, cycles) {
-        assert.isNull(err);
-        assert.deepEqual(cycles, {
-          i: ['indirect-circular-deps'],
-          'indirect-circular-deps': ['i']
-        });
-      }),
+      // "indirect-circular-deps": shouldFindCircularRemoteDeps(function (err, cycles) {
+      //   assert.isNull(err);
+      //   assert.deepEqual(cycles, {
+      //     i: ['indirect-circular-deps'],
+      //     'indirect-circular-deps': ['i']
+      //   });
+      // }),
       "circular-deps": shouldFindCircularRemoteDeps(function (err, cycles) {
         assert.isNull(err);
         assert.deepEqual(cycles, {
           f: ['g'],
           g: ['f']
+        });
+      }),
+      "complex-circular-deps": shouldFindCircularRemoteDeps(function (err, cycles) {
+        assert.isNull(err);
+        assert.deepEqual(cycles, {
+          'complex-circular-deps': [ 'l', 'm' ],
+          'l': [ 'complex-circular-deps' ],
+          'm': [ 'complex-circular-deps' ]
         });
       })
     },

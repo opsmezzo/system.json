@@ -370,6 +370,9 @@ trees['circular-deps']
     .tree['circular-deps']
     .remoteDependencies.f;
 
+//
+// System with indirect circular dependencies.
+//
 trees['indirect-circular-deps'] = {
   tree: {
     'indirect-circular-deps': {
@@ -435,3 +438,97 @@ trees['indirect-circular-deps']
   .dependencies.k
   .dependencies['indirect-circular-deps'] = trees['indirect-circular-deps']
     .tree['indirect-circular-deps'];
+
+//
+// System with complex circular dependencies.
+//
+trees['complex-circular-deps'] = {
+  tree: {
+    'complex-circular-deps': {
+      remoteDependencies: {
+        l: {
+          runlist: [],
+          remoteDependencies: {
+            couchdb: {
+              name: 'couchdb',
+              version: '0.3.0',
+              required: '*',
+              dependencies: {},
+              runlist: []
+            },
+            graphite: {
+              name: 'graphite',
+              version: '0.3.0',
+              required: '*',
+              dependencies: {},
+              runlist: []
+            }
+          },
+          name: 'l',
+          version: '0.3.0',
+          required: '0.3.0',
+          dependencies: {}
+        },
+        m: {
+          runlist: [],
+          remoteDependencies: {
+            couchdb: {
+              name: 'couchdb',
+              version: '0.3.0',
+              required: '*',
+              dependencies: {},
+              runlist: []
+            },
+            graphite: {
+              name: 'graphite',
+              version: '0.3.0',
+              required: '*',
+              dependencies: {},
+              runlist: []
+            }
+          },
+          name: 'm',
+          version: '0.3.0',
+          required: '0.3.0',
+          dependencies: {}
+        }
+      },
+      dependencies: {
+        a: {
+          version: '0.0.1',
+          runlist: [],
+          dependencies: {},
+          required: '0.0.1',
+          name: 'a'
+        }
+      },
+      name: 'complex-circular-deps',
+      version: '0.3.0',
+      required: '*',
+      runlist: ['a']
+    }
+  },
+  list: ['a@0.0.1', 'complex-circular-deps@0.3.0']
+};
+
+//
+// Setup the complex circular dependency
+//
+trees['complex-circular-deps']
+  .tree['complex-circular-deps']
+  .remoteDependencies.l
+  .remoteDependencies['complex-circular-deps'] = trees['complex-circular-deps']
+    .tree['complex-circular-deps'];
+
+trees['complex-circular-deps']
+  .tree['complex-circular-deps']
+  .remoteDependencies.m
+  .remoteDependencies['complex-circular-deps'] = trees['complex-circular-deps']
+    .tree['complex-circular-deps'];
+
+trees['complex-circular-deps']
+  .tree['complex-circular-deps']
+  .remoteDependencies.m
+  .remoteDependencies.l = trees['complex-circular-deps']
+    .tree['complex-circular-deps']
+    .remoteDependencies.l;
