@@ -133,13 +133,13 @@ vows.describe('system.json/dependencies').addBatch({
       })
     },
     "remote.cycles()": {
-      // "indirect-circular-deps": shouldFindCircularRemoteDeps(function (err, cycles) {
-      //   assert.isNull(err);
-      //   assert.deepEqual(cycles, {
-      //     i: ['indirect-circular-deps'],
-      //     'indirect-circular-deps': ['i']
-      //   });
-      // }),
+      "indirect-circular-deps": shouldFindCircularRemoteDeps(function (err, cycles) {
+        assert.isNull(err);
+        assert.deepEqual(cycles, {
+          i: ['indirect-circular-deps'],
+          'indirect-circular-deps': ['i']
+        });
+      }),
       "circular-deps": shouldFindCircularRemoteDeps(function (err, cycles) {
         assert.isNull(err);
         assert.deepEqual(cycles, {
