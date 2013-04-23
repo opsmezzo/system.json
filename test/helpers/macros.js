@@ -8,7 +8,6 @@
 var assert = require('assert'),
     fs = require('fs'),
     path = require('path'),
-    conservatory = require('conservatory-api'),
     cycle = require('cycle'),
     nock = require('nock'),
     utile = require('utile'),

@@ -23,8 +23,8 @@
     "wtfos": "~0.0.3"
   },
   "devDependencies": {
-    "conservatory-api": "~0.6.0",
-    "nock": "0.13.x",
+    "composer-api": "~1.0.0",
+    "nock": "0.17.x",
     "vows": "0.7.x"
   },
   "main": "./lib/index",
@@ -32,6 +32,6 @@
     "test": "vows test/*-test.js test/**/*-test.js --spec"
   },
   "engines": {
-    "node": "0.8.x | 0.6.x"
+    "node": "0.10.x || 0.8.x || 0.6.x"
   }
 }

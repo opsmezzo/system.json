@@ -8,7 +8,7 @@
 var assert = require('assert'),
     fs = require('fs'),
     path = require('path'),
-    conservatory = require('conservatory-api'),
+    composer = require('composer-api'),
     nock = require('nock'),
     utile = require('utile'),
     mock = require('./mock'),
@@ -17,14 +17,14 @@ var assert = require('assert'),
 
 //
 // Helper function that fetches all dependencies for
-// `system` and `os` using a mocked `conservatory-api` client.
+// `system` and `os` using a mocked `composer-api` client.
 //
 exports.dependencies = function (system, os, callback) {
   var api = nock('http://api.testquill.com');
   
   mock.systems.all(api);
   systemJson.dependencies({
-    client: conservatory.createClient('composer', {
+    client: composer.createClient({
       protocol: 'http',
       host: 'api.testquill.com',
       port: 80,

@@ -10,7 +10,7 @@ var assert = require('assert'),
     path = require('path'),
     nock = require('nock'),
     vows = require('vows'),
-    conservatory = require('conservatory-api'),
+    composer = require('composer-api'),
     macros = require('./helpers/macros'),
     mock = require('./helpers/mock'),
     systemJson = require('../lib');
@@ -46,7 +46,7 @@ function shouldMakeRemoteRunlist(assertFn) {
       mock.systems.all(api);
       systemJson.dependencies({
         systems: this.context.name,
-        client: conservatory.createClient('composer', {
+        client: composer.createClient({
           protocol: 'http',
           host: 'api.testquill.com',
           port: 80,
@@ -76,7 +76,7 @@ function shouldFindCircularRemoteDeps(assertFn) {
       mock.systems.all(api);
       systemJson.dependencies({
         systems: this.context.name,
-        client: conservatory.createClient('composer', {
+        client: composer.createClient({
           protocol: 'http',
           host: 'api.testquill.com',
           port: 80,
