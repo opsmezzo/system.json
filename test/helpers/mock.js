@@ -18,6 +18,7 @@ var systemsDir = path.join(__dirname, '..', 'fixtures'),
     sourceDir  = path.join(systemsDir, 'tgz');
 
 mock.api     = nock('http://api.testquill.com');
+mock.config  = {};
 mock.systems = {};
 
 mock.systems.get = function (api, system) {
@@ -31,4 +32,9 @@ mock.systems.all = function (api) {
       mock.systems.get(api, system);
     }
   });
+};
+
+mock.config.servers = function (api, servers) {
+  api.get('/config/servers')
+    .reply(200, servers);
 };

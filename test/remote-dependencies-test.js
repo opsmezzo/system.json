@@ -90,6 +90,27 @@ function shouldFindCircularRemoteDeps(assertFn) {
   }
 }
 
+function shouldVerifyRunlist(options, callback) {
+  return {
+    topic: function () {
+      var api  = nock('http://api.testquill.com');
+
+      mock.config.servers(api, options.servers);
+      systemJson.remote.verifyRunlist({
+        runlist: options.runlist,
+        clusters: options.clusters,
+        client: composer.createClient({
+          protocol: 'http',
+          host: 'api.testquill.com',
+          port: 80,
+          auth: {}
+        }).config
+      }, this.callback);
+    },
+    'should respond with correct servers': callback
+  };
+}
+
 vows.describe('system.json/remote-dependencies').addBatch({
   "When using system.json": {
     "remote.runlist()": {
@@ -139,6 +160,18 @@ vows.describe('system.json/remote-dependencies').addBatch({
           'complex-circular-deps': [ 'l', 'm' ],
           'l': [ 'complex-circular-deps' ],
           'm': [ 'complex-circular-deps' ]
+        });
+      })
+    },
+    '`remote.verifyRunlist()`': {
+      'no clusters, one dependency': shouldVerifyRunlist({
+        runlist: [ { name: 'couchdb' } ],
+        servers: { 'couchdb': [ { public: ['couchdb.net' ] } ]
+        }
+      }, function (err, satisfying) {
+        assert.isNull(err);
+        assert.deepEqual(satisfying, {
+          'couchdb': [ { public: ['couchdb.net' ] } ]
         });
       })
     }
