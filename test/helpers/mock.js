@@ -34,7 +34,12 @@ mock.systems.all = function (api) {
   });
 };
 
-mock.config.servers = function (api, servers) {
-  api.get('/config/servers')
+mock.config.servers = function (api, cluster, servers) {
+  if (typeof cluster === 'object') {
+    servers = cluster;
+    cluster = null;
+  }
+
+  api.get('/config/servers' + (cluster ? ('/' + cluster) : ''))
     .reply(200, servers);
 };

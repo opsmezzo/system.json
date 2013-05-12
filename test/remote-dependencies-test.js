@@ -95,7 +95,15 @@ function shouldVerifyRunlist(options, callback) {
     topic: function () {
       var api  = nock('http://api.testquill.com');
 
-      mock.config.servers(api, options.servers);
+      if (options.clusters) {
+        Object.keys(options.servers).forEach(function (cluster) {
+          mock.config.servers(api, cluster, options.servers[cluster]);
+        });
+      }
+      else {
+        mock.config.servers(api, options.servers);
+      }
+
       systemJson.remote.verifyRunlist({
         runlist: options.runlist,
         clusters: options.clusters,
@@ -167,6 +175,39 @@ vows.describe('system.json/remote-dependencies').addBatch({
       'no clusters, one dependency': shouldVerifyRunlist({
         runlist: [ { name: 'couchdb' } ],
         servers: { 'couchdb': [ { public: ['couchdb.net' ] } ]
+        }
+      }, function (err, satisfying) {
+        assert.isNull(err);
+        assert.deepEqual(satisfying, {
+          'couchdb': [ { public: ['couchdb.net' ] } ]
+        });
+      }),
+      'not satisfied dependency': shouldVerifyRunlist({
+        runlist: [ { name: 'couchdb' }, { name: 'redis' } ],
+        servers: { 'redis': [ { public: ['redis.net' ] } ]
+        }
+      }, function (err, satisfying) {
+        assert(err);
+        assert.deepEqual(err.missing, [ 'couchdb' ]);
+      }),
+      'one cluster': shouldVerifyRunlist({
+        runlist: [ { name: 'couchdb' } ],
+        clusters: ['composer'],
+        servers: {
+          composer: { couchdb: [ { public: ['couchdb.net'] } ] }
+        }
+      }, function (err, satisfying) {
+        assert.isNull(err);
+        assert.deepEqual(satisfying, {
+          'couchdb': [ { public: ['couchdb.net' ] } ]
+        });
+      }),
+      'duplicate servers in two clusters': shouldVerifyRunlist({
+        runlist: [ { name: 'couchdb' } ],
+        clusters: ['composer', 'conservatory'],
+        servers: {
+          composer: { couchdb: [ { public: ['couchdb.net'] } ] },
+          conservatory: { couchdb: [ { public: ['couchdb.net'] } ] }
         }
       }, function (err, satisfying) {
         assert.isNull(err);
