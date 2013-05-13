@@ -214,6 +214,25 @@ vows.describe('system.json/remote-dependencies').addBatch({
         assert.deepEqual(satisfying, {
           'couchdb': [ { public: ['couchdb.net' ] } ]
         });
+      }),
+      'servers are correctly ordered': shouldVerifyRunlist({
+        runlist: [ { name: 'couchdb' } ],
+        clusters: ['tempi', 'us-east-1'],
+        servers: {
+          tempi: { couchdb: [
+            { public: ['couchdb.us-west-1.net'] },
+            { public: ['couchdb.us-east-1.net'] }
+          ]},
+          'us-east-1': { couchdb: [ { public: ['couchdb.us-east-1.net'] } ] }
+        }
+      }, function (err, satisfying) {
+        assert.isNull(err);
+        assert.deepEqual(satisfying, {
+          'couchdb': [
+            { public: ['couchdb.us-east-1.net'] },
+            { public: ['couchdb.us-west-1.net' ] }
+          ]
+        });
       })
     }
   }
